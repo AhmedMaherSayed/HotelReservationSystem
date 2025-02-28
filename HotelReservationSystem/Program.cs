@@ -1,4 +1,9 @@
 
+using HotelReservationSystem.Data;
+using HotelReservationSystem.Extensions;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+
 namespace HotelReservationSystem
 {
     public class Program
@@ -13,6 +18,15 @@ namespace HotelReservationSystem
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSqlConnection"))
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+                .LogTo(log => Debug.WriteLine(log), LogLevel.Information)
+                .EnableSensitiveDataLogging()
+            );
+
+            builder.Services.AddServices();
 
             var app = builder.Build();
 
