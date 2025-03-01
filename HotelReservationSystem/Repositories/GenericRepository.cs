@@ -7,7 +7,8 @@ using HotelReservationSystem.Data.Entities;
 
 namespace HotelReservationSystem.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+
+    public class GenericRepository<T> : IGenericRepository<T> where T : BaseModel
     {
 
         private readonly ApplicationDbContext _dbContext;
@@ -26,7 +27,9 @@ namespace HotelReservationSystem.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public void Delete(T item)
+
+        public async void Delete(int id)
+
         {
             var Entity = await GetByIdWithTrackingAsync(id);
             Entity.IsDeleted = true;
@@ -47,7 +50,9 @@ namespace HotelReservationSystem.Repositories
         public async Task<T?> GetByIdAsync(int id)
         {
             return await _dbContext.Set<T>()
-                .Where(E => !E.Deleted && E.ID == id).
+                .Where(E => !E.IsDeleted && E.Id == id).FirstOrDefaultAsync();
+
+
         }
 
         public async Task<T?> GetByIdWithTrackingAsync(int id)

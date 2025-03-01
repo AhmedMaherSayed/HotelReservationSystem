@@ -4,7 +4,7 @@ namespace HotelReservationSystem.Data.Entities
 {
     public class Room : BaseModel
     {
-        public int EmployeeId { get; set; }
+        //public int EmployeeId { get; set; }
         //public Employee Employee { get; set; }
         public RoomType Type { get; set; }
         public decimal CurrentPricePerNight { get; set; }
