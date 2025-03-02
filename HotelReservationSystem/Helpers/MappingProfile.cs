@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using HotelReservationSystem.Data.Entities;
 using HotelReservationSystem.DTOs.RoomDTOs;
+using HotelReservationSystem.ViewModels.AuthenticationViewModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace HotelReservationSystem.Helpers
 {
@@ -8,9 +10,15 @@ namespace HotelReservationSystem.Helpers
     {
         public MappingProfile()
         {
-            CreateMap<Room,CreateRoomDTO>();
+            #region Room
+            CreateMap<Room, CreateRoomDTO>();
             CreateMap<Room, RoomResponseDTO>();
             CreateMap<Room, UpdateRoomDTO>();
+            #endregion
+
+            #region Authentication
+            CreateMap<RegisterViewModel, IdentityUser>();
+            #endregion
         }
     }
 }
