@@ -12,10 +12,12 @@ namespace HotelReservationSystem.Services
     public class RoomService
     {
         private readonly IGenericRepository<Room> _genericRepo;
+        
 
         public RoomService(IGenericRepository<Room> genericRepo)
         {
             _genericRepo = genericRepo;
+
         }
         public ResponseViewModel<Room> Create(CreateRoomDTO roomDto)
         {
@@ -41,7 +43,7 @@ namespace HotelReservationSystem.Services
             var room = await _genericRepo.GetByIdAsync(id);
             if (room == null) return ResponseViewModel<RoomResponseDTO>.Failure(ErrorCode.RoomNotFound,"Room not found");
             
-             _genericRepo.UpdateInclude(room,nameof(roomDto.Type), nameof(roomDto.Status), 
+             _genericRepo.UpdateInclude(room,nameof(roomDto.RoomType), nameof(roomDto.Status), 
                  nameof(roomDto.CurrentPricePerNight));
             
             
