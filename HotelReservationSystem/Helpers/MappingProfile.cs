@@ -8,9 +8,19 @@ namespace HotelReservationSystem.Helpers
     {
         public MappingProfile()
         {
-            CreateMap<Room,CreateRoomDTO>();
-            CreateMap<Room, RoomResponseDTO>();
-            CreateMap<Room, UpdateRoomDTO>();
+            CreateMap<Room,CreateRoomDTO>()
+                .ForMember(dest => dest.RoomType, opt => opt.MapFrom(src => src.Type));
+            CreateMap<Room, RoomResponseDTO>()
+                .ForMember(dest=>dest.RoomType,opt=>opt.MapFrom(src=>src.Type));
+            CreateMap<Room, UpdateRoomDTO>()
+                .ForMember(dest=>dest.RoomType,opt=>opt.MapFrom(src=>src.Type));
+            CreateMap<CreateRoomDTO, Room>()
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.RoomType));
+
+            CreateMap<UpdateRoomDTO, Room>()
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.RoomType));
+            ;
+
         }
     }
 }

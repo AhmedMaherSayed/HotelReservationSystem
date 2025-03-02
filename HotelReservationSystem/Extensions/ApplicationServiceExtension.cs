@@ -1,4 +1,6 @@
-﻿using HotelReservationSystem.Helpers;
+﻿using AutoMapper;
+using HotelReservationSystem.Helpers;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HotelReservationSystem.Extensions
 {
@@ -6,7 +8,8 @@ namespace HotelReservationSystem.Extensions
     {
         public static void AddServices(this IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(MappingProfile));
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
         }
     }
 }
