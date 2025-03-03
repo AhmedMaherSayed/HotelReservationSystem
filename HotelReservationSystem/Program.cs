@@ -37,7 +37,6 @@ namespace HotelReservationSystem
 
             AutoMapperHelper.Mapper = app.Services.GetService<IMapper>();
 
-
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
