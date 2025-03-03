@@ -19,10 +19,10 @@ namespace HotelReservationSystem.Services
             _genericRepo = genericRepo;
 
         }
-        public ResponseViewModel<Room> Create(CreateRoomDTO roomDto)
+        public async  Task<ResponseViewModel<Room>> Create(CreateRoomDTO roomDto)
         {
             var room= roomDto.Map<Room>();
-            _genericRepo.AddAsync(room);
+             await _genericRepo.AddAsync(room);
             return ResponseViewModel<Room>.Success(room);
         }
         public async Task<ResponseViewModel<List<RoomResponseDTO>>> GetAll()
@@ -42,8 +42,13 @@ namespace HotelReservationSystem.Services
         {
             var room = await _genericRepo.GetByIdAsync(id);
             if (room == null) return ResponseViewModel<RoomResponseDTO>.Failure(ErrorCode.RoomNotFound,"Room not found");
-            
-             _genericRepo.UpdateInclude(room,nameof(roomDto.RoomType), nameof(roomDto.Status), 
+            //roomDto.Map(room);
+            room.Type = roomDto.RoomType;
+            room.Status = roomDto.Status;
+            room.CurrentPricePerNight = roomDto.CurrentPricePerNight;
+
+
+            _genericRepo.UpdateInclude(room,nameof(roomDto.RoomType), nameof(roomDto.Status), 
                  nameof(roomDto.CurrentPricePerNight));
             
             
