@@ -13,7 +13,6 @@ namespace HotelReservationSystem.Middelwares
             }
             catch (Exception ex)
             {
-                var response = new ResponseViewModel<bool>();
                 await context.Response
                     .WriteAsJsonAsync(ResponseViewModel<bool>.Failure(ErrorCode.BadRequest, $"{ex.InnerException?.Message ?? ex.Message}"));
 
