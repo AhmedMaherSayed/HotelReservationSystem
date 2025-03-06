@@ -18,7 +18,6 @@ namespace HotelReservationSystem.Middelwares
                     .WriteAsJsonAsync(ResponseViewModel<bool>.Failure(ErrorCode.BadRequest, $"{ex.InnerException?.Message ?? ex.Message}"));
 
                 logger.LogError(ex.InnerException?.Message ?? ex.Message);
-                throw;
             }
         }
     }
