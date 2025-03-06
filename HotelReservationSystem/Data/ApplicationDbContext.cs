@@ -18,7 +18,7 @@ namespace HotelReservationSystem.Data
         public DbSet<Facility> Facilities { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
-
+        public DbSet<RoomImage> RoomImages { get; set; }
         public ApplicationDbContext()
         {
             
