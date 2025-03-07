@@ -10,6 +10,9 @@ namespace HotelReservationSystem.Configurations
         {
             base.Configure(builder);
 
+            builder.Property(x => x.FacilityPrice)
+                .HasPrecision(10, 2);
+
             builder.HasOne(x => x.Room)
                 .WithMany(x => x.Facilities)
                 .HasForeignKey(x => x.RoomId)
