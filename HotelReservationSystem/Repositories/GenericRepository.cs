@@ -24,16 +24,15 @@ namespace HotelReservationSystem.Repositories
         public async Task AddAsync(T item)
         {
             await _dbContext.Set<T>().AddAsync(item);
-            await _dbContext.SaveChangesAsync();
+            await SaveChangesAsync();
         }
 
 
         public async void Delete(int id)
-
         {
             var Entity = await GetByIdWithTrackingAsync(id);
             Entity.IsDeleted = true;
-            _dbContext.SaveChanges();
+            await SaveChangesAsync();
         }
 
         public IQueryable<T> Get(Expression<Func<T, bool>> Predicate)
@@ -62,6 +61,8 @@ namespace HotelReservationSystem.Repositories
                .AsTracking()
                .FirstOrDefaultAsync();
         }
+
+       
 
         public void Update(T item)
         {
@@ -92,11 +93,15 @@ namespace HotelReservationSystem.Repositories
                 }
             }
 
-            _dbContext.SaveChanges();
+             _dbContext.SaveChanges();
         }
 
 
 
+        private async Task SaveChangesAsync()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
 
 
     }
