@@ -16,7 +16,7 @@ namespace HotelReservationSystem.Data
         public DbSet<Offer> Offers { get; set; }
         public DbSet<RoomFacility> RoomFacilities { get; set; }
         public DbSet<Facility> Facilities { get; set; }
-        public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<Data.Entities.Invoice> Invoices { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<RoomImage> RoomImages { get; set; }
         public ApplicationDbContext()
