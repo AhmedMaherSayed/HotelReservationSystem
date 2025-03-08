@@ -38,8 +38,8 @@ namespace HotelReservationSystem
 
             AutoMapperHelper.Mapper = app.Services.GetService<IMapper>();
 
-            app.UseMiddleware<GlobalErrorHandlingMiddleware>();
-            app.UseMiddleware<TransactionMiddleware>();
+            //app.UseMiddleware<GlobalErrorHandlingMiddleware>();
+            //app.UseMiddleware<TransactionMiddleware>();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

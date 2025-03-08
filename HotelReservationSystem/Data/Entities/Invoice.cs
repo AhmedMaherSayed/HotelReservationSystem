@@ -8,7 +8,7 @@ namespace HotelReservationSystem.Data.Entities
         public Reservation Reservation { get; set; }
         public decimal Amount { get; set; }
         public DateTime InvoiceDate { get; set; }
-        public PaymentMethod Method { get; set; }
+        public Enums.PaymentMethod Method { get; set; }
         public PaymentStatus Status { get; set; }
     }
 }

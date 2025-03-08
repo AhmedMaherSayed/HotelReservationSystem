@@ -2,6 +2,7 @@
 using HotelReservationSystem.Data.Entities;
 using HotelReservationSystem.DTOs.RoomDTOs;
 using HotelReservationSystem.ViewModels.AuthenticationViewModels;
+using HotelReservationSystem.ViewModels.ReservationViewModels;
 using Microsoft.AspNetCore.Identity;
 
 namespace HotelReservationSystem.Helpers
@@ -26,6 +27,10 @@ namespace HotelReservationSystem.Helpers
 
             #region Authentication
             CreateMap<RegisterViewModel, IdentityUser>();
+            #endregion
+
+            #region Payment
+            CreateMap<Reservation, ReservationViewModel>();
             #endregion
         }
     }
