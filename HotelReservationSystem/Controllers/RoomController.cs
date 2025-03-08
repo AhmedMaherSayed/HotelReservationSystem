@@ -35,7 +35,7 @@ namespace HotelReservationSystem.Controllers
 
         
         [HttpPost]
-        public async Task<ResponseViewModel<Room>> Create([FromBody] CreateRoomDTO roomDto)
+        public async Task<ResponseViewModel<Room>> Create([FromForm] CreateRoomDTO roomDto)
         {
             if (roomDto == null) return ResponseViewModel<Room>.Failure(ErrorCode.InvalidRoomRequest, "Invalid room data.");
 

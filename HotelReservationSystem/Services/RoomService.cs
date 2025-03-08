@@ -22,6 +22,42 @@ namespace HotelReservationSystem.Services
         public async  Task<ResponseViewModel<Room>> Create(CreateRoomDTO roomDto)
         {
             var room= roomDto.Map<Room>();
+            
+
+            if(roomDto.Facilities is not null)
+            {
+                room.Facilities = new List<RoomFacility>();
+                foreach (var facilityId in roomDto.Facilities)
+                {
+                    var facility = new RoomFacility
+                    {
+                        FacilityId = facilityId
+                    };
+                    room.Facilities.Add(facility);
+                }
+            }
+
+            if(roomDto.Images is not null)
+            {
+                room.RoomImages = new List<RoomImage>();
+                foreach (var image in roomDto.Images)
+                {
+                    if (image is not null)
+                    {
+                        var imageUrl = DocumentSettings.UploadImage(image);
+
+                        if (imageUrl is not null)
+                        {
+                            var roomImage = new RoomImage
+                            {
+                                ImageURL = imageUrl,
+                                CreatedAt = DateTime.Now
+                            };
+                            room.RoomImages.Add(roomImage);
+                        }
+                    }
+                }
+            }
              await _genericRepo.AddAsync(room);
             return ResponseViewModel<Room>.Success(room);
         }
