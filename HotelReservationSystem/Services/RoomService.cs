@@ -69,13 +69,13 @@ namespace HotelReservationSystem.Services
             _genericRepo.UpdateInclude(room, nameof(room.IsDeleted));
             return ResponseViewModel<string>.Success("Room deleted successfully");
         }
-        public async Task<ResponseViewModel<List<RoomResponseDTO>>> GetAvailableRoomsAsync()
-        {
-            var availableRooms = await  _genericRepo.Get(r => r.Status == RoomStatus.Available)
-                .Select(r => r.Map<RoomResponseDTO>()).ToListAsync();
+        //public async Task<ResponseViewModel<List<RoomResponseDTO>>> GetAvailableRoomsAsync()
+        //{
+        //    var availableRooms = await  _genericRepo.Get(r => r.Status == RoomStatus.Available)
+        //        .Select(r => r.Map<RoomResponseDTO>()).ToListAsync();
 
-            return ResponseViewModel<List<RoomResponseDTO>>.Success(availableRooms);
-        }
+        //    return ResponseViewModel<List<RoomResponseDTO>>.Success(availableRooms);
+        //}
     }
 
 }
