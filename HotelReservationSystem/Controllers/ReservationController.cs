@@ -28,11 +28,31 @@ namespace HotelReservationSystem.Controllers
             return ResponseViewModel<IEnumerable<RoomResponseDTO>>.Success(rooms);
         }
 
+
+        [HttpGet("customer/{customerId}")]
+        public async Task<ResponseViewModel<List<ReservationViewModel>>> GetCustomerReservations(int customerId)
+        {
+            return await _reservationService.GetCustomerReservations(customerId);
+        }
+
+
+
         [HttpPost]
         public async Task<ResponseViewModel<ReservationViewModel>> BookReservation(ReservationCreateViewModel reservationCreate)
         {
-            throw new NotImplementedException();
+            if (reservationCreate == null)
+                return ResponseViewModel<ReservationViewModel>.Failure(ErrorCode.BadRequest, "Reservation details are required.");
+
+            if (reservationCreate.CheckInDate < DateTime.UtcNow.Date)
+                return ResponseViewModel<ReservationViewModel>.Failure(ErrorCode.InvalidOperation, "Check-in date cannot be in the past.");
+
+            if (reservationCreate.CheckOutDate.HasValue && reservationCreate.CheckOutDate <= reservationCreate.CheckInDate)
+                return ResponseViewModel<ReservationViewModel>.Failure(ErrorCode.InvalidOperation, "Check-out date must be after the check-in date.");
+
+            return await _reservationService.CreateReservation(reservationCreate);
         }
+
+
 
         [HttpGet]
         public async Task<ResponseViewModel<ReservationViewModel>> ViewReservationDetails(int ReservationId)
@@ -47,11 +67,19 @@ namespace HotelReservationSystem.Controllers
             return ResponseViewModel<ReservationViewModel>.Success(reservation);
         }
 
-        [HttpPost]
-        public async Task<ResponseViewModel<ReservationViewModel>> EditReservation(ReservationUpdateViewModel reservationUpdate)
+      
+
+        // Update a reservation (only if status is Pending)
+        [HttpPut("{id}")]
+        public async Task<ResponseViewModel<ReservationViewModel>> EditReservation(int id, [FromBody] ReservationUpdateViewModel reservationUpdate)
         {
-            throw new NotImplementedException();
+            if (id != reservationUpdate.ReservationId)
+                return ResponseViewModel<ReservationViewModel>.Failure(ErrorCode.InvalidOperation, "Reservation ID mismatch");
+
+            return await _reservationService.UpdateReservation(reservationUpdate);
         }
+
+
 
         [HttpPost]
         public async Task<ResponseViewModel<ReservationViewModel>> ConfirmReservation(int ReservationId)
@@ -59,10 +87,24 @@ namespace HotelReservationSystem.Controllers
             throw new NotImplementedException();
         }
 
-        [HttpPost]
-        public async Task<ResponseViewModel<string>> CancelReservation(int ReservationId)
+
+        [HttpPut("cancel/{reservationId}")]
+        public async Task<ResponseViewModel<string>> CancelReservation(int reservationId)
         {
-            throw new NotImplementedException();
+            if (reservationId <= 0)
+                return ResponseViewModel<string>.Failure(ErrorCode.BadRequest, "Invalid reservation ID.");
+
+            return await _reservationService.CancelReservation(reservationId);
         }
+
+        [HttpDelete("{reservationId}")]
+        public async Task<ResponseViewModel<string>> DeleteReservation(int reservationId)
+        {
+          
+           return await _reservationService.DeleteReservation(reservationId);
+
+        }
+
+
     }
 }

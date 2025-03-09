@@ -28,7 +28,7 @@ namespace HotelReservationSystem.Repositories
         }
 
 
-        public async void Delete(int id)
+        public async Task Delete(int id)
         {
             var Entity = await GetByIdWithTrackingAsync(id);
             Entity.IsDeleted = true;

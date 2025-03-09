@@ -7,6 +7,7 @@ using HotelReservationSystem.ViewModels;
 using HotelReservationSystem.ViewModels.Reservation;
 using HotelReservationSystem.ViewModels.ReservationRoom;
 using Microsoft.EntityFrameworkCore;
+using Invoice = HotelReservationSystem.Data.Entities.Invoice;
 
 namespace HotelReservationSystem.Services
 {
@@ -57,26 +58,99 @@ namespace HotelReservationSystem.Services
             return reservation;
         }
 
-        public async Task<IEnumerable<ReservationViewModel>> GetCustomerReservations(int CustomerId)
+
+
+
+        public async Task<ResponseViewModel<List<ReservationViewModel>>> GetCustomerReservations(int customerId)
         {
-            throw new NotImplementedException();
+            var reservations = await _reservationRepository.Get(r => r.CustomerId == customerId && !r.IsDeleted)
+                .Select(r => r.Map<ReservationViewModel>())
+                .ToListAsync();
+
+            return ResponseViewModel<List<ReservationViewModel>>.Success(reservations);
         }
 
-        public async Task<ReservationViewModel> AddReservation(ReservationCreateViewModel reservationCreate)
+
+
+
+        // Create a new reservation ensuring that there is no double booking.
+        public async Task<ResponseViewModel<ReservationViewModel>> CreateReservation(ReservationCreateViewModel model)
         {
-            throw new NotImplementedException();
+            foreach (var roomVm in model.Rooms)
+            {
+                var room = await _roomRepository.Get(r => r.Id == roomVm.RoomId).FirstOrDefaultAsync();
+                if (room == null)
+                    return ResponseViewModel<ReservationViewModel>.Failure(ErrorCode.RoomNotFound, "Room not found");
+
+                var overlappingReservations = _reservationRepository.Get(r =>
+                    r.Rooms.Any(rr => rr.RoomId == roomVm.RoomId) &&
+                    !r.IsDeleted &&
+                    (r.CheckInDate < model.CheckOutDate &&
+                    (r.CheckOutDate ?? r.CheckInDate.AddDays(roomVm.NumberOfNights)) > model.CheckInDate)
+                );
+                if (overlappingReservations.Any())
+                    return ResponseViewModel<ReservationViewModel>.Failure(ErrorCode.RoomNotAvailable, "Room is not available for the selected dates");
+            }
+
+            var reservation = model.Map<Reservation>();
+            reservation.Status = ReservationStatus.Pending;
+
+            await _reservationRepository.AddAsync(reservation);
+
+            var reservationVm = reservation.Map<ReservationViewModel>();
+            return ResponseViewModel<ReservationViewModel>.Success(reservationVm);
         }
+
 
         // NOTE : Update Operation Only Applied On (Pending) Reservations
-        public async Task<ReservationViewModel> UpdateReservation(ReservationUpdateViewModel reservationUpdate)
+        public async Task<ResponseViewModel<ReservationViewModel>> UpdateReservation(ReservationUpdateViewModel model)
         {
-            throw new NotImplementedException();
+            var reservation = await _reservationRepository.Get(r => r.Id == model.ReservationId)
+                                                    .FirstOrDefaultAsync();
+            if (reservation == null)
+                return ResponseViewModel<ReservationViewModel>.Failure(ErrorCode.ReservationNotFound, "Reservation not found");
+
+            if (reservation.Status != ReservationStatus.Pending)
+                return ResponseViewModel<ReservationViewModel>.Failure(ErrorCode.InvalidOperation, "Only pending reservations can be updated");
+
+            foreach (var roomVm in model.Rooms)
+            {
+                var overlappingReservations = _reservationRepository.Get(r =>
+                    r.Id != reservation.Id && 
+                    r.Rooms.Any(rr => rr.RoomId == roomVm.RoomId) &&
+                    !r.IsDeleted &&
+                    (r.CheckInDate < model.CheckOutDate &&
+                    (r.CheckOutDate ?? r.CheckInDate.AddDays(roomVm.NumberOfNights)) > model.CheckInDate)
+                );
+                if (overlappingReservations.Any())
+                    return ResponseViewModel<ReservationViewModel>.Failure(ErrorCode.RoomNotAvailable, "Room is not available for the selected dates");
+            }
+
+            reservation.CheckInDate = model.CheckInDate;
+            reservation.CheckOutDate = model.CheckOutDate;
+            reservation.TotalPrice = model.TotalPrice;
+
+            reservation.Rooms = model.Rooms.Select(r => new ReservationRoom
+            {
+                RoomId = r.RoomId,
+                NumberOfNights = r.NumberOfNights,
+                PricePerNight = r.PricePerNight
+            }).ToList();
+
+            _reservationRepository.UpdateInclude(
+                reservation,
+                nameof(reservation.CheckInDate),
+                nameof(reservation.CheckOutDate),
+                nameof(reservation.TotalPrice),
+                nameof(reservation.Rooms)
+               
+            );
+
+            var reservationVm = reservation.Map<ReservationViewModel>();
+            return ResponseViewModel<ReservationViewModel>.Success(reservationVm);
         }
 
-        public async Task<bool> DeleteReservation(int ReservationId)
-        {
-            throw new NotImplementedException();
-        }
+
 
         // NOTE : Confirmation => Payment Option => Add Invoice
         public async Task<ReservationViewModel> ConfirmReservation(int ReservationId)
@@ -84,9 +158,39 @@ namespace HotelReservationSystem.Services
             throw new NotImplementedException();
         }
 
-        public async Task<string> CancelReservation(int ReservationId)
+
+
+        public async Task<ResponseViewModel<string>> DeleteReservation(int id)
         {
-            throw new NotImplementedException();
+            var reservation = await _reservationRepository.Get(x => x.Id == id).FirstOrDefaultAsync();
+            if (reservation == null)
+                return ResponseViewModel<string>.Failure(ErrorCode.ReservationNotFound, "Reservation not found");
+
+            reservation.IsDeleted = true;
+            _reservationRepository.UpdateInclude(reservation, nameof(reservation.IsDeleted));
+
+            return ResponseViewModel<string>.Success("Reservation deleted successfully");
         }
+
+
+
+        public async Task<ResponseViewModel<string>> CancelReservation(int reservationId)
+        {
+            var reservation = await _reservationRepository.Get(x => x.Id == reservationId)
+                .FirstOrDefaultAsync();
+
+            if (reservation == null)
+                return ResponseViewModel<string>.Failure(ErrorCode.ReservationNotFound, "Reservation not found.");
+
+            if (reservation.Status != ReservationStatus.Pending)
+                return ResponseViewModel<string>.Failure(ErrorCode.InvalidOperation, "Only pending reservations can be canceled.");
+
+            reservation.Status = ReservationStatus.Cancelled;
+            _reservationRepository.UpdateInclude(reservation, nameof(reservation.Status));
+
+            return ResponseViewModel<string>.Success("Reservation canceled successfully.");
+        }
+
+
     }
 }

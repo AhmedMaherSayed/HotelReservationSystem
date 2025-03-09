@@ -13,7 +13,7 @@ namespace HotelReservationSystem.Repositories
         Task AddAsync(T item);
         void Update(T item);
         void UpdateInclude(T item, params string[] modifiedProperties);
-        void Delete(int id);
+        Task Delete(int id);
 
     }
 }

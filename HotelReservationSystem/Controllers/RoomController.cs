@@ -59,10 +59,10 @@ namespace HotelReservationSystem.Controllers
         }
 
         
-        [HttpGet("available")]
-        public async Task<ResponseViewModel<List<RoomResponseDTO>>> GetAvailableRooms()
-        {
-            return await _roomService.GetAvailableRoomsAsync();
-        }
+        //[HttpGet("available")]
+        //public async Task<ResponseViewModel<List<RoomResponseDTO>>> GetAvailableRooms()
+        //{
+        //    return await _roomService.GetAvailableRoomsAsync();
+        //}
     }
 }
