@@ -21,32 +21,32 @@ namespace HotelReservationSystem.Controllers
 
       
         [HttpGet]
-        public async Task<ResponseViewModel<List<RoomResponseDTO>>> GetAll()
+        public async Task<ResponseViewModel<List<RoomViewModel>>> GetAll()
         {
             return await _roomService.GetAll();
         }
 
      
         [HttpGet("{id}")]
-        public async Task<ResponseViewModel<RoomResponseDTO>> GetById(int id)
+        public async Task<ResponseViewModel<RoomViewModel>> GetById(int id)
         {
             return await _roomService.GetByIdAsync(id);
         }
 
         
         [HttpPost]
-        public async Task<ResponseViewModel<Room>> Create([FromForm] CreateRoomDTO roomDto)
+        public async Task<ResponseViewModel<RoomViewModel>> Create([FromForm] CreateRoomDTO roomDto)
         {
-            if (roomDto == null) return ResponseViewModel<Room>.Failure(ErrorCode.InvalidRoomRequest, "Invalid room data.");
+            if (roomDto == null) return ResponseViewModel<RoomViewModel>.Failure(ErrorCode.InvalidRoomRequest, "Invalid room data.");
 
             return await _roomService.Create(roomDto);
         }
 
         
         [HttpPut("{id}")]
-        public async Task<ResponseViewModel<RoomResponseDTO>> Update(int id, [FromBody] UpdateRoomDTO roomDto)
+        public async Task<ResponseViewModel<RoomViewModel>> Update(int id, [FromBody] UpdateRoomDTO roomDto)
         {
-            if (roomDto == null) return ResponseViewModel<RoomResponseDTO>.Failure(ErrorCode.InvalidRoomRequest, "Invalid room data.");
+            if (roomDto == null) return ResponseViewModel<RoomViewModel>.Failure(ErrorCode.InvalidRoomRequest, "Invalid room data.");
 
             return await _roomService.UpdateAsync(id, roomDto);
         }
@@ -60,7 +60,7 @@ namespace HotelReservationSystem.Controllers
 
         
         [HttpGet("available")]
-        public async Task<ResponseViewModel<List<RoomResponseDTO>>> GetAvailableRooms()
+        public async Task<ResponseViewModel<List<RoomViewModel>>> GetAvailableRooms()
         {
             return await _roomService.GetAvailableRoomsAsync();
         }

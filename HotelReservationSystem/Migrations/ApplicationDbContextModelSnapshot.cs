@@ -33,7 +33,7 @@ namespace HotelReservationSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2025, 3, 8, 17, 9, 6, 515, DateTimeKind.Utc).AddTicks(9127));
+                        .HasDefaultValue(new DateTime(2025, 3, 10, 22, 5, 24, 18, DateTimeKind.Utc).AddTicks(9557));
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -73,7 +73,7 @@ namespace HotelReservationSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2025, 3, 8, 17, 9, 6, 516, DateTimeKind.Utc).AddTicks(5937));
+                        .HasDefaultValue(new DateTime(2025, 3, 10, 22, 5, 24, 19, DateTimeKind.Utc).AddTicks(3441));
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -121,7 +121,7 @@ namespace HotelReservationSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2025, 3, 8, 17, 9, 6, 517, DateTimeKind.Utc).AddTicks(2843));
+                        .HasDefaultValue(new DateTime(2025, 3, 10, 22, 5, 24, 19, DateTimeKind.Utc).AddTicks(7023));
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -168,7 +168,7 @@ namespace HotelReservationSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2025, 3, 8, 17, 9, 6, 518, DateTimeKind.Utc).AddTicks(53));
+                        .HasDefaultValue(new DateTime(2025, 3, 10, 22, 5, 24, 20, DateTimeKind.Utc).AddTicks(1015));
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -226,7 +226,7 @@ namespace HotelReservationSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2025, 3, 8, 17, 9, 6, 518, DateTimeKind.Utc).AddTicks(7058));
+                        .HasDefaultValue(new DateTime(2025, 3, 10, 22, 5, 24, 20, DateTimeKind.Utc).AddTicks(4834));
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -273,7 +273,7 @@ namespace HotelReservationSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2025, 3, 8, 17, 9, 6, 519, DateTimeKind.Utc).AddTicks(5671));
+                        .HasDefaultValue(new DateTime(2025, 3, 10, 22, 5, 24, 20, DateTimeKind.Utc).AddTicks(8694));
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -322,7 +322,7 @@ namespace HotelReservationSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2025, 3, 8, 17, 9, 6, 520, DateTimeKind.Utc).AddTicks(8295));
+                        .HasDefaultValue(new DateTime(2025, 3, 10, 22, 5, 24, 21, DateTimeKind.Utc).AddTicks(3807));
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -366,18 +366,18 @@ namespace HotelReservationSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2025, 3, 8, 17, 9, 6, 521, DateTimeKind.Utc).AddTicks(9345));
+                        .HasDefaultValue(new DateTime(2025, 3, 10, 22, 5, 24, 21, DateTimeKind.Utc).AddTicks(8595));
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<int>("FacilityCount")
+                    b.Property<int?>("FacilityCount")
                         .HasColumnType("int");
 
                     b.Property<int>("FacilityId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("FacilityPrice")
+                    b.Property<decimal?>("FacilityPrice")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
@@ -452,7 +452,7 @@ namespace HotelReservationSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2025, 3, 8, 17, 9, 6, 522, DateTimeKind.Utc).AddTicks(6559));
+                        .HasDefaultValue(new DateTime(2025, 3, 10, 22, 5, 24, 22, DateTimeKind.Utc).AddTicks(1869));
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -512,13 +512,13 @@ namespace HotelReservationSystem.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "a3b4701c-89fb-4209-ab11-3ef2137cc6ac",
+                            Id = "b479308d-27fd-4e35-bd74-f92ca2512040",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "54d2aea0-5e6e-45eb-970b-68b3338ea2eb",
+                            Id = "36f6c400-f3d1-4136-bc32-db6598fd41a2",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         });

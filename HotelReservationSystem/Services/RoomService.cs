@@ -59,12 +59,15 @@ namespace HotelReservationSystem.Services
                 }
             }
              await _genericRepo.AddAsync(room);
-            return ResponseViewModel<Room>.Success(room);
+
+           var roomViewModel=room.Map<RoomViewModel>();
+           return ResponseViewModel<RoomViewModel>.Success(roomViewModel);
         }
-        public async Task<ResponseViewModel<List<RoomResponseDTO>>> GetAll()
+        public async Task<ResponseViewModel<List<RoomViewModel>>> GetAll()
         {
           var rooms =  _genericRepo.Get(r=> !r.IsDeleted)
-                .Select(r => r.Map<RoomResponseDTO>()).ToList();
+                .Select(r => r.Map<RoomViewModel>()).ToList();
+           
             //var roomDtos = await rooms.Project<RoomResponseDTO>().ToListAsync();
             return ResponseViewModel<List<RoomResponseDTO>>.Success(rooms);
         }
