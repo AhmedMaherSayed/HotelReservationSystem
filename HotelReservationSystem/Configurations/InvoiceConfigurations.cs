@@ -1,12 +1,12 @@
 ﻿using HotelReservationSystem.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
+using invoiceEntity = HotelReservationSystem.Data.Entities.Invoice;
 namespace HotelReservationSystem.Configurations
 {
-    public class InvoiceConfigurations : BaseModelConfigurations<Invoice>
+    public class InvoiceConfigurations : BaseModelConfigurations<invoiceEntity>
     {
-        public override void Configure(EntityTypeBuilder<Invoice> builder)
+        public override void Configure(EntityTypeBuilder<invoiceEntity> builder)
         {
             base.Configure(builder);
 
@@ -15,7 +15,7 @@ namespace HotelReservationSystem.Configurations
 
             builder.HasOne(x => x.Reservation)
                 .WithOne(x => x.Invoice)
-                .HasForeignKey<Invoice>(x => x.ReservationId);
+                .HasForeignKey<invoiceEntity>(x => x.ReservationId);
         }
     }
 }
