@@ -8,6 +8,7 @@
         RoomNotAvailable=102,
         ReservationNotFound=103,
         InvalidOperation=104,
+        PaymentError=105,
 
         Ok = 200,
 

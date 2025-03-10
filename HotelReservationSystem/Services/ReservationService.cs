@@ -1,8 +1,10 @@
-﻿using HotelReservationSystem.Data.Entities;
+﻿using Azure;
+using HotelReservationSystem.Data.Entities;
 using HotelReservationSystem.Data.Enums;
 using HotelReservationSystem.DTOs.RoomDTOs;
 using HotelReservationSystem.Helpers;
 using HotelReservationSystem.Repositories;
+using HotelReservationSystem.Services.PaymentService;
 using HotelReservationSystem.ViewModels;
 using HotelReservationSystem.ViewModels.Reservation;
 using HotelReservationSystem.ViewModels.ReservationRoom;
@@ -18,11 +20,19 @@ namespace HotelReservationSystem.Services
         public IGenericRepository<Invoice> _invoiceRepository;
         public IGenericRepository<Room> _roomRepository;
 
-        public ReservationService(IGenericRepository<Reservation> reservationRepository, IGenericRepository<Invoice> invoiceRepository, IGenericRepository<Room> roomRepository)
+        public IPaymentService _paymentService;
+
+        public ReservationService(
+            IGenericRepository<Reservation> reservationRepository,
+            IGenericRepository<Invoice> invoiceRepository,
+            IGenericRepository<Room> roomRepository,
+            IPaymentService paymentService
+            )
         { 
             _reservationRepository = reservationRepository; 
             _invoiceRepository = invoiceRepository;
             _roomRepository = roomRepository;
+            _paymentService = paymentService;
         }
 
         public async Task<IEnumerable<RoomResponseDTO>> GetAvailableRoomsAsync(RoomSearchDTO roomSearch)
@@ -147,14 +157,30 @@ namespace HotelReservationSystem.Services
         }
 
 
-      
-
 
 
         // NOTE : Confirmation => Payment Option => Add Invoice
-        public async Task<ReservationViewModel> ConfirmReservation(int ReservationId)
+        public async Task<ResponseViewModel<ReservationViewModel>> ConfirmReservation(int ReservationId)
         {
-            throw new NotImplementedException();
+            var reservation = await _reservationRepository
+                .GetByIdWithTrackingAsync(ReservationId);
+
+            if (reservation is null) 
+            {
+                return ResponseViewModel<ReservationViewModel>.Failure(ErrorCode.NotFound, "Reservation Not Found.");
+            }
+
+            var paymentResponse = await _paymentService.CreateOrUpdatePaymentIntentAsync(ReservationId);
+
+            if (!paymentResponse.IsSucsess)
+            {
+                return paymentResponse;
+            }
+
+            reservation.Status = ReservationStatus.Confirmed;
+            _reservationRepository.UpdateInclude(reservation, nameof(reservation.Status));
+
+            return paymentResponse;
         }
 
 

@@ -102,7 +102,7 @@ namespace HotelReservationSystem.Controllers
         [HttpPost]
         public async Task<ResponseViewModel<ReservationViewModel>> ConfirmReservation(int ReservationId)
         {
-            throw new NotImplementedException();
+            return await _reservationService.ConfirmReservation(ReservationId);
         }
 
 
