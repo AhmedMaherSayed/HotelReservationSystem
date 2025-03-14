@@ -1,5 +1,4 @@
-﻿using Azure;
-using HotelReservationSystem.Data.Entities;
+﻿using HotelReservationSystem.Data.Entities;
 using HotelReservationSystem.Data.Enums;
 using HotelReservationSystem.DTOs.RoomDTOs;
 using HotelReservationSystem.Helpers;
@@ -8,33 +7,28 @@ using HotelReservationSystem.Services.PaymentService;
 using HotelReservationSystem.ViewModels;
 using HotelReservationSystem.ViewModels.Reservation;
 using HotelReservationSystem.ViewModels.ReservationRoom;
-using HotelReservationSystem.ViewModels.ReservationViewModels;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
-using Invoice = HotelReservationSystem.Data.Entities.Invoice;
-using ReservationRoomViewModel = HotelReservationSystem.ViewModels.ReservationRoom.ReservationRoomViewModel;
-using ReservationViewModel1 = HotelReservationSystem.ViewModels.Reservation.ReservationViewModel1;
 
 
-namespace HotelReservationSystem.Services
+namespace HotelReservationSystem.Services.Reservation
 {
-    public class ReservationService
+    public class ReservationService : IReservationService
     {
-        public IGenericRepository<Reservation> _reservationRepository;
+        public IGenericRepository<Data.Entities.Reservation> _reservationRepository;
         public IGenericRepository<ReservationRoom> _reservationRoomRepo;
-        public IGenericRepository<Invoice> _invoiceRepository;
-        public IGenericRepository<Room> _roomRepository;
+        public IGenericRepository<Data.Entities.Invoice> _invoiceRepository;
+        public IGenericRepository<Data.Entities.Room> _roomRepository;
 
         public IPaymentService _paymentService;
 
         public ReservationService(
-            IGenericRepository<Reservation> reservationRepository,
+            IGenericRepository<Data.Entities.Reservation> reservationRepository,
             IGenericRepository<ReservationRoom> reservationRoomRepo,
-            IGenericRepository<Invoice> invoiceRepository,
-            IGenericRepository<Room> roomRepository,
+            IGenericRepository<Data.Entities.Invoice> invoiceRepository,
+            IGenericRepository<Data.Entities.Room> roomRepository,
             IPaymentService paymentService
             )
-        { 
+        {
             _reservationRepository = reservationRepository;
             _reservationRoomRepo = reservationRoomRepo;
             _invoiceRepository = invoiceRepository;
@@ -62,11 +56,11 @@ namespace HotelReservationSystem.Services
 
 
 
-        public async Task<ReservationViewModel1?> GetReservationDetails(int ReservationId)
+        public async Task<ReservationViewModel?> GetReservationDetails(int ReservationId)
         {
             var reservation = await _reservationRepository
                 .Get(x => x.Id == ReservationId)
-                .Select(x => new ReservationViewModel1
+                .Select(x => new ReservationViewModel
                 {
                     ReservationId = ReservationId,
                     CheckInDate = x.CheckInDate,
@@ -89,10 +83,10 @@ namespace HotelReservationSystem.Services
 
 
 
-        public async Task<List<ReservationViewModel1>> GetCustomerReservations(int customerId)
+        public async Task<List<ReservationViewModel>> GetCustomerReservations(int customerId)
         {
             var reservations = await _reservationRepository.Get(r => r.CustomerId == customerId && !r.IsDeleted)
-                .Select(r => r.Map<ReservationViewModel1>())
+                .Select(r => r.Map<ReservationViewModel>())
                 .ToListAsync();
 
             return reservations;
@@ -144,7 +138,7 @@ namespace HotelReservationSystem.Services
                 }
             }
 
-            var reservation = model.Map<Reservation>();
+            var reservation = model.Map<Data.Entities.Reservation>();
             reservation.Status = ReservationStatus.Pending;
 
             reservation.Rooms = model.Rooms.Select(rvm => new ReservationRoom
@@ -157,7 +151,7 @@ namespace HotelReservationSystem.Services
 
             await _reservationRepository.AddAsync(reservation);
 
-           
+
 
             var resultViewModel = reservation.Map<ReservationViewModel>();
             return ResponseViewModel<ReservationViewModel>.Success(resultViewModel);
@@ -264,48 +258,44 @@ namespace HotelReservationSystem.Services
 
 
         // NOTE : Confirmation => Payment Option => Add Invoice
-        //public async Task<ResponseViewModel<ReservationViewModel1>> ConfirmReservation(int ReservationId)
-        //{
-        //    var reservation = await _reservationRepository
-        //        .GetByIdWithTrackingAsync(ReservationId);
-
-        //    if (reservation is null) 
-        //    {
-        //        return ResponseViewModel<ReservationViewModel1>.Failure(ErrorCode.NotFound, "Reservation Not Found.");
-        //    }
-
-        //    var paymentResponse = await _paymentService.CreateOrUpdatePaymentIntentAsync(ReservationId);
-
-        //    if (!paymentResponse.IsSucsess)
-        //    {
-        //        return paymentResponse;
-        //    }
-
-        //    reservation.Status = ReservationStatus.Confirmed;
-        //    _reservationRepository.UpdateInclude(reservation, nameof(reservation.Status));
-
-        //    return paymentResponse;
-        //}
-
-
-
-    
-
-        public async Task<ResponseViewModel<string>> DeleteAsync(int id)
+        public async Task<ResponseViewModel<ReservationViewModel>> ConfirmReservation(int ReservationId)
         {
-            var reservation = await _reservationRepository.Get(x => x.Id == id).FirstOrDefaultAsync();
-            if (reservation == null)
-                return ResponseViewModel<string>.Failure(ErrorCode.ReservationNotFound, "Reservation not found");
+            var reservation = await _reservationRepository
+                .GetByIdWithTrackingAsync(ReservationId);
 
-            reservation.IsDeleted = true;
-            _reservationRepository.UpdateInclude(reservation, nameof(reservation.IsDeleted));
+            if (reservation is null)
+            {
+                return ResponseViewModel<ReservationViewModel>.Failure(ErrorCode.NotFound, "Reservation Not Found.");
+            }
 
-            return ResponseViewModel<string>.Success("Reservation deleted successfully");
+            var paymentResponse = await _paymentService.CreatePaymentIntentAsync(ReservationId);
+
+            if (!paymentResponse.IsSucsess)
+            {
+                return ResponseViewModel<ReservationViewModel>.Failure(paymentResponse.ErrorCode, paymentResponse.Message);
+            }
+
+            var invoice = new Data.Entities.Invoice
+            {
+                ReservationId = reservation.Id,
+                Amount = reservation.TotalPrice,
+                InvoiceDate = DateTime.UtcNow,
+                PaymentIntentId = paymentResponse.Data.PaymentIntentID,
+                ClientSecret = paymentResponse.Data.ClientSecret,
+                Method = Data.Enums.PaymentMethod.CreditCard,
+                Status = PaymentStatus.Pending
+            };
+
+            await _invoiceRepository.AddAsync(invoice);
+
+            reservation.Status = ReservationStatus.Confirmed;
+            _reservationRepository.UpdateInclude(reservation, nameof(reservation.Status));
+
+            return ResponseViewModel<ReservationViewModel>.Success(reservation.Map<ReservationViewModel>());
         }
 
 
-
-        public async Task<ResponseViewModel<string>> CancelReservationAsync(int reservationId)
+        public async Task<ResponseViewModel<string>> CancelReservation(int reservationId)
         {
             var reservation = await _reservationRepository.Get(x => x.Id == reservationId)
                 .FirstOrDefaultAsync();
@@ -323,6 +313,17 @@ namespace HotelReservationSystem.Services
         }
 
 
+        public async Task<ResponseViewModel<string>> DeleteAsync(int id)
+        {
+            var reservation = await _reservationRepository.Get(x => x.Id == id).FirstOrDefaultAsync();
+            if (reservation == null)
+                return ResponseViewModel<string>.Failure(ErrorCode.ReservationNotFound, "Reservation not found");
+
+            reservation.IsDeleted = true;
+            _reservationRepository.UpdateInclude(reservation, nameof(reservation.IsDeleted));
+
+            return ResponseViewModel<string>.Success("Reservation deleted successfully");
+        }
 
     }
 }
