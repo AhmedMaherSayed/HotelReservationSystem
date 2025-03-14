@@ -6,6 +6,6 @@ namespace HotelReservationSystem.Services.PaymentService
 {
     public interface IPaymentService
     {
-        Task<ResponseViewModel<ReservationViewModel>> CreateOrUpdatePaymentIntentAsync(int reservationId);
+        Task<ResponseViewModel<ReservationViewModel1>> CreateOrUpdatePaymentIntentAsync(int reservationId);
     }
 }

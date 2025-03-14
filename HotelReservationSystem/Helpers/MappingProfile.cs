@@ -30,7 +30,7 @@ namespace HotelReservationSystem.Helpers
             #endregion
 
             #region Payment
-            CreateMap<Reservation, ReservationViewModel>();
+            CreateMap<Reservation, ReservationViewModel1>();
             #endregion
         }
     }

@@ -10,17 +10,17 @@ namespace HotelReservationSystem.Services.PaymentService
 {
     public class PaymentService(IGenericRepository<Reservation> reservationRepository, IGenericRepository<ReservationRoom> roomReservationRepo, IMapper mapper, IConfiguration configuration) : IPaymentService
     {
-        public async Task<ResponseViewModel<ReservationViewModel>> CreateOrUpdatePaymentIntentAsync(int reservationId)
+        public async Task<ResponseViewModel<ReservationViewModel1>> CreateOrUpdatePaymentIntentAsync(int reservationId)
         {
             StripeConfiguration.ApiKey = configuration.GetRequiredSection("StripeSettings")["SecretKey"];
             // Get price
 
             var reservation = await reservationRepository.GetByIdAsync(reservationId);
             if (reservation is null)
-                return ResponseViewModel<ReservationViewModel>.Failure(errorCode: ErrorCode.NotFound);
+                return ResponseViewModel<ReservationViewModel1>.Failure(errorCode: ErrorCode.NotFound);
 
             if (reservation.TotalPrice <= 0)
-                return ResponseViewModel<ReservationViewModel>.Failure(ErrorCode.BadRequest);
+                return ResponseViewModel<ReservationViewModel1>.Failure(ErrorCode.BadRequest);
 
             var amount = (long)(reservation.TotalPrice * 100);
 
@@ -54,9 +54,9 @@ namespace HotelReservationSystem.Services.PaymentService
             }
             reservationRepository.UpdateInclude(reservation, nameof(reservation.PaymentIntentId), nameof(reservation.ClientSecret));
 
-            var response = mapper.Map<ReservationViewModel>(reservation);
+            var response = mapper.Map<ReservationViewModel1>(reservation);
 
-            return ResponseViewModel<ReservationViewModel>.Success(response);
+            return ResponseViewModel<ReservationViewModel1>.Success(response);
         }
     }
 }

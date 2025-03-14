@@ -11,7 +11,7 @@ namespace HotelReservationSystem.Controllers
     public class PaymentsController(IPaymentService paymentService) : ControllerBase
     {
         [HttpPost("CreateOrUpdatePaymentIntent/{reservationId:int}")]
-        public async Task<ResponseViewModel<ReservationViewModel>> CreateOrUpdatePaymentIntentAsync(int reservationId)
+        public async Task<ResponseViewModel<ReservationViewModel1>> CreateOrUpdatePaymentIntentAsync(int reservationId)
          => await paymentService.CreateOrUpdatePaymentIntentAsync(reservationId);
     }
 }

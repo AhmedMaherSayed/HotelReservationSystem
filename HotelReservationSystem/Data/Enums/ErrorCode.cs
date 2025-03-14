@@ -9,6 +9,8 @@
         ReservationNotFound=103,
         InvalidOperation=104,
         PaymentError=105,
+        RoomAlreadyBooked = 106,
+
 
         Ok = 200,
 

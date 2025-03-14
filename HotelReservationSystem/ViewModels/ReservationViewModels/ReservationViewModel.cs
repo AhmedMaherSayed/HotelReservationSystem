@@ -1,6 +1,6 @@
 ﻿namespace HotelReservationSystem.ViewModels.ReservationViewModels
 {
-    public class ReservationViewModel
+    public class ReservationViewModel1
     {
         public int ResrvationID { get; set; }
         public DateTime CheckInDate { get; set; }

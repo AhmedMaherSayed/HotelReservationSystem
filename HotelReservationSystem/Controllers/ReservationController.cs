@@ -21,89 +21,84 @@ namespace HotelReservationSystem.Controllers
             _reservationService = reservationService;
         }
 
-        [HttpGet]
-        public async Task<ResponseViewModel<IEnumerable<RoomResponseDTO>>> RoomSearch(RoomSearchDTO roomSearch)
-        {
-            var rooms = await _reservationService.GetAvailableRoomsAsync(roomSearch);
+      
 
-            return ResponseViewModel<IEnumerable<RoomResponseDTO>>.Success(rooms);
+
+        [HttpGet("available-rooms")]
+        public async Task<IActionResult> GetAvailableRooms()
+        {
+            var response = await _reservationService.GetAvailableRooms();
+
+            if (!response.IsSucsess)
+                return BadRequest(response);
+
+            return Ok(response);
         }
 
 
-      
 
         [HttpGet("customer/{customerId}")]
-        public async Task<ResponseViewModel<List<ReservationViewModel>>> GetCustomerReservations(int customerId)
+        public async Task<ResponseViewModel<List<ReservationViewModel1>>> GetCustomerReservations(int customerId)
         {
             var reservations = await _reservationService.GetCustomerReservations(customerId);
             if (reservations == null || reservations.Count == 0)
-                return ResponseViewModel<List<ReservationViewModel>>.Failure(ErrorCode.NotFound, "No reservations found for this customer.");
+                return ResponseViewModel<List<ReservationViewModel1>>.Failure(ErrorCode.NotFound, "No reservations found for this customer.");
 
-            return ResponseViewModel<List<ReservationViewModel>>.Success(reservations);
+            return ResponseViewModel<List<ReservationViewModel1>>.Success(reservations);
         }
 
 
-        [HttpPost("book")]
-        public async Task<ResponseViewModel<ReservationViewModel>> BookReservation([FromBody] ReservationCreateViewModel reservationCreate)
+     
+
+        public async Task<IActionResult> BookReservation([FromBody] ReservationCreateViewModel model)
         {
-            if (reservationCreate == null)
-                return ResponseViewModel<ReservationViewModel>.Failure(ErrorCode.BadRequest, "Reservation details are required.");
+            var response = await _reservationService.CreateReservation(model);
 
-            if (reservationCreate.CheckInDate < DateTime.UtcNow.Date)
-                return ResponseViewModel<ReservationViewModel>.Failure(ErrorCode.InvalidOperation, "Check-in date cannot be in the past.");
+            if (!response.IsSucsess)
+                return BadRequest(response);
 
-            if (reservationCreate.CheckOutDate.HasValue && reservationCreate.CheckOutDate <= reservationCreate.CheckInDate)
-                return ResponseViewModel<ReservationViewModel>.Failure(ErrorCode.InvalidOperation, "Check-out date must be after the check-in date.");
-
-            var reservation = await _reservationService.CreateReservation(reservationCreate);
-            if (reservation == null)
-                return ResponseViewModel<ReservationViewModel>.Failure(ErrorCode.RoomNotAvailable, "Room is not available for the selected dates.");
-
-            return ResponseViewModel<ReservationViewModel>.Success(reservation.Map<ReservationViewModel>());
+            return Ok(response);
         }
-
 
 
 
         [HttpGet]
-        public async Task<ResponseViewModel<ReservationViewModel>> ViewReservationDetails(int ReservationId)
+        public async Task<ResponseViewModel<ReservationViewModel1>> ViewReservationDetails(int ReservationId)
         {
             var reservation = await _reservationService.GetReservationDetails(ReservationId);
 
             if (reservation == null)
             {
-                return ResponseViewModel<ReservationViewModel>.Failure(ErrorCode.NotFound, "Reservation Is Not Found.");
+                return ResponseViewModel<ReservationViewModel1>.Failure(ErrorCode.NotFound, "Reservation Is Not Found.");
             }
 
-            return ResponseViewModel<ReservationViewModel>.Success(reservation);
+            return ResponseViewModel<ReservationViewModel1>.Success(reservation);
         }
 
 
 
 
         // Update a reservation (only if status is Pending)
-        [HttpPut("{id}")]
-        public async Task<ResponseViewModel<ReservationViewModel>> EditReservation(int id, [FromBody] ReservationUpdateViewModel reservationUpdate)
+    
+        [HttpPut("{reservationId}")]
+        public async Task<IActionResult> UpdateReservation(int reservationId, [FromBody] ReservationUpdateViewModel model)
         {
-            if (id != reservationUpdate.ReservationId)
-                return ResponseViewModel<ReservationViewModel>.Failure(ErrorCode.InvalidOperation, "Reservation ID mismatch");
+            var response = await _reservationService.UpdateReservation(reservationId, model);
 
-            var success = await _reservationService.EditReservation(reservationUpdate);
-            if (!success)
-                return ResponseViewModel<ReservationViewModel>.Failure(ErrorCode.InvalidOperation, "Cannot update this reservation.");
+            if (!response.IsSucsess)
+                return BadRequest(response);
 
-            return ResponseViewModel<ReservationViewModel>.Success(reservationUpdate.Map<ReservationViewModel>());
+            return Ok(response);
         }
 
 
-     
+        //[HttpPost]
+        //public async Task<ResponseViewModel<ReservationViewModel1>> ConfirmReservation(int ReservationId)
+        //{
+        //    return await _reservationService.ConfirmReservation(ReservationId);
+        //}
 
 
-        [HttpPost]
-        public async Task<ResponseViewModel<ReservationViewModel>> ConfirmReservation(int ReservationId)
-        {
-            return await _reservationService.ConfirmReservation(ReservationId);
-        }
 
 
         [HttpPut("cancel/{reservationId}")]
@@ -112,27 +107,21 @@ namespace HotelReservationSystem.Controllers
             if (reservationId <= 0)
                 return ResponseViewModel<string>.Failure(ErrorCode.BadRequest, "Invalid reservation ID.");
 
-            var success = await _reservationService.CancelReservation(reservationId);
-            if (!success)
-                return ResponseViewModel<string>.Failure(ErrorCode.InvalidOperation, "Reservation cannot be canceled.");
-
-            return ResponseViewModel<string>.Success("Reservation canceled successfully.");
+            return await _reservationService.CancelReservationAsync(reservationId);
         }
 
 
 
-        [HttpDelete("{reservationId}")]
+      
+
+
+        [HttpDelete("Delete/{reservationId}")]
         public async Task<ResponseViewModel<string>> DeleteReservation(int reservationId)
         {
-            var success = await _reservationService.DeleteReservation(reservationId);
-            if (!success)
-                return ResponseViewModel<string>.Failure(ErrorCode.NotFound, "Reservation not found.");
-
-            return ResponseViewModel<string>.Success("Reservation deleted successfully.");
+            return await _reservationService.DeleteAsync(reservationId);
         }
 
 
-    
 
 
     }
