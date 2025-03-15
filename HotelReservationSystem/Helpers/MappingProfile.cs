@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using HotelReservationSystem.Data.Entities;
+using HotelReservationSystem.DTOs.FeedBackDTOs;
 using HotelReservationSystem.DTOs.RoomDTOs;
 using HotelReservationSystem.ViewModels.AuthenticationViewModels;
+using HotelReservationSystem.ViewModels.FeedbackViewModels;
 using HotelReservationSystem.ViewModels.ReservationViewModels;
 using Microsoft.AspNetCore.Identity;
 
@@ -31,6 +33,14 @@ namespace HotelReservationSystem.Helpers
 
             #region Payment
             CreateMap<Reservation, ReservationViewModel>();
+            #endregion
+
+            #region Feedback
+            CreateMap<SubmitFeedbackViewModel, SubmitFeedbackDto>();
+            CreateMap<SubmitFeedbackDto, Feedback>();
+            CreateMap<Feedback, DisplayFeedbackDto>();
+            CreateMap<DisplayFeedbackDto, DisplayFeebackViewModel>();
+            CreateMap<Feedback, DisplayFeebackViewModel>();
             #endregion
         }
     }

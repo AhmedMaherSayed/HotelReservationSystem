@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HotelReservationSystem.Helpers;
+using HotelReservationSystem.Services.FeedbackServ;
 using HotelReservationSystem.Services.PaymentService;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,7 +12,7 @@ namespace HotelReservationSystem.Extensions
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IPaymentService, PaymentService>();
-
+            services.AddScoped<IFeedbackService, FeedBackService>();
         }
     }
 }
