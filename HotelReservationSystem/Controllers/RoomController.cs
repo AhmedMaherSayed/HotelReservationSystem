@@ -12,9 +12,9 @@ namespace HotelReservationSystem.Controllers
     [ApiController]
     public class RoomController : ControllerBase
     {
-        private readonly RoomService _roomService;
+        private readonly IRoomService _roomService;
 
-        public RoomController(RoomService roomService)
+        public RoomController(IRoomService roomService)
         {
             _roomService = roomService;
         }
@@ -59,11 +59,11 @@ namespace HotelReservationSystem.Controllers
         }
 
         
-        [HttpGet("available")]
-        public async Task<ResponseViewModel<List<RoomViewModel>>> GetAvailableRooms()
-        {
-            return await _roomService.GetAvailableRoomsAsync();
-        }
+        //[HttpGet("available")]
+        //public async Task<ResponseViewModel<List<RoomViewModel>>> GetAvailableRooms()
+        //{
+        //    return await _roomService.GetAvailableRoomsAsync();
+        //}
         //[HttpGet("available")]
         //public async Task<ResponseViewModel<List<RoomResponseDTO>>> GetAvailableRooms()
         //{

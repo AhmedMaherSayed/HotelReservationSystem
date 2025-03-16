@@ -19,9 +19,9 @@ namespace HotelReservationSystem.Services.Room
             _genericRepo = genericRepo;
 
         }
-        public async Task<ResponseViewModel<Data.Entities.Room>> Create(CreateRoomDTO roomDto)
+        public async Task<ResponseViewModel<RoomViewModel>> Create(CreateRoomDTO roomDto)
         {
-            var room= roomDto.Map<Room>();
+            var room= roomDto.Map<Data.Entities.Room>();
             
 
             if(roomDto.Facilities is not null)
@@ -65,28 +65,29 @@ namespace HotelReservationSystem.Services.Room
         }
         public async Task<ResponseViewModel<List<RoomViewModel>>> GetAll()
         {
-          var rooms =  _genericRepo.Get(r=> !r.IsDeleted)
-                .Select(r => r.Map<RoomViewModel>()).ToList();
+          var rooms = await _genericRepo.Get(r=> !r.IsDeleted)
+                .Select(r => r.Map<RoomViewModel>())
+                .ToListAsync();
            
             //var roomDtos = await rooms.Project<RoomResponseDTO>().ToListAsync();
-            return ResponseViewModel<List<RoomResponseDTO>>.Success(rooms);
+            return ResponseViewModel<List<RoomViewModel>>.Success(rooms);
         }
-        public async Task<ResponseViewModel<RoomResponseDTO>> GetByIdAsync(int id)
+        public async Task<ResponseViewModel<RoomViewModel>> GetByIdAsync(int id)
         {
             var room = await _genericRepo.Get(x => x.Id == id)
-                .Select(r => r.Map<RoomResponseDTO>())
+                .Select(r => r.Map<RoomViewModel>())
                 .FirstOrDefaultAsync();
-            if (room == null) return ResponseViewModel<RoomResponseDTO>.Failure(ErrorCode.RoomNotFound, "Room not found");
-            return ResponseViewModel<RoomResponseDTO>.Success(room);
+            if (room == null) return ResponseViewModel<RoomViewModel>.Failure(ErrorCode.RoomNotFound, "Room not found");
+            return ResponseViewModel<RoomViewModel>.Success(room);
         }
-        public async Task<ResponseViewModel<RoomResponseDTO>> UpdateAsync(int id, UpdateRoomDTO roomDto)
+        public async Task<ResponseViewModel<RoomViewModel>> UpdateAsync(int id, UpdateRoomDTO roomDto)
         {
             var room = await _genericRepo.Get(x => x.Id == id)
                   .FirstOrDefaultAsync();
             //var room = await _genericRepo.Get(x => x.Id == id)
             //    .Select(r => r.Map<UpdateRoomDTO>())
             //      .FirstOrDefaultAsync();
-            if (room == null) return ResponseViewModel<RoomResponseDTO>.Failure(ErrorCode.RoomNotFound, "Room not found");
+            if (room == null) return ResponseViewModel<RoomViewModel>.Failure(ErrorCode.RoomNotFound, "Room not found");
             //roomDto.Map(room);
             room.Type = roomDto.RoomType;
             room.Status = roomDto.Status;
@@ -97,7 +98,7 @@ namespace HotelReservationSystem.Services.Room
                  nameof(roomDto.CurrentPricePerNight));
 
 
-            return ResponseViewModel<RoomResponseDTO>.Success(room.Map<RoomResponseDTO>());
+            return ResponseViewModel<RoomViewModel>.Success(room.Map<RoomViewModel>());
         }
         public async Task<ResponseViewModel<string>> DeleteAsync(int id)
         {
