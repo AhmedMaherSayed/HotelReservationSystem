@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HotelReservationSystem.Data.Entities;
 using HotelReservationSystem.DTOs.FeedBackDTOs;
+using HotelReservationSystem.DTOs;
 using HotelReservationSystem.DTOs.RoomDTOs;
 using HotelReservationSystem.ViewModels.AuthenticationViewModels;
 using HotelReservationSystem.ViewModels.FeedbackViewModels;
@@ -32,7 +33,7 @@ namespace HotelReservationSystem.Helpers
             #endregion
 
             #region Payment
-            CreateMap<Reservation, ReservationViewModel>();
+            CreateMap<PaymentIntent, PaymentIntentDTO>();
             #endregion
 
             #region Feedback

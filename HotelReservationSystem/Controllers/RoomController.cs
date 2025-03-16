@@ -1,7 +1,7 @@
 ﻿using HotelReservationSystem.Data.Entities;
 using HotelReservationSystem.Data.Enums;
 using HotelReservationSystem.DTOs.RoomDTOs;
-using HotelReservationSystem.Services;
+using HotelReservationSystem.Services.Room;
 using HotelReservationSystem.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -64,5 +64,10 @@ namespace HotelReservationSystem.Controllers
         {
             return await _roomService.GetAvailableRoomsAsync();
         }
+        //[HttpGet("available")]
+        //public async Task<ResponseViewModel<List<RoomResponseDTO>>> GetAvailableRooms()
+        //{
+        //    return await _roomService.GetAvailableRoomsAsync();
+        //}
     }
 }

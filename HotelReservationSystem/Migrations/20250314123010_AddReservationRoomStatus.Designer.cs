@@ -4,6 +4,7 @@ using HotelReservationSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelReservationSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250314123010_AddReservationRoomStatus")]
+    partial class AddReservationRoomStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,7 +36,7 @@ namespace HotelReservationSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2025, 3, 10, 22, 5, 24, 18, DateTimeKind.Utc).AddTicks(9557));
+                        .HasDefaultValue(new DateTime(2025, 3, 14, 12, 30, 2, 695, DateTimeKind.Utc).AddTicks(6546));
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -73,7 +76,7 @@ namespace HotelReservationSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2025, 3, 10, 22, 5, 24, 19, DateTimeKind.Utc).AddTicks(3441));
+                        .HasDefaultValue(new DateTime(2025, 3, 14, 12, 30, 2, 696, DateTimeKind.Utc).AddTicks(985));
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -121,7 +124,7 @@ namespace HotelReservationSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2025, 3, 10, 22, 5, 24, 19, DateTimeKind.Utc).AddTicks(7023));
+                        .HasDefaultValue(new DateTime(2025, 3, 14, 12, 30, 2, 696, DateTimeKind.Utc).AddTicks(8073));
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -168,7 +171,7 @@ namespace HotelReservationSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2025, 3, 10, 22, 5, 24, 20, DateTimeKind.Utc).AddTicks(1015));
+                        .HasDefaultValue(new DateTime(2025, 3, 14, 12, 30, 2, 697, DateTimeKind.Utc).AddTicks(3318));
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -226,7 +229,7 @@ namespace HotelReservationSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2025, 3, 10, 22, 5, 24, 20, DateTimeKind.Utc).AddTicks(4834));
+                        .HasDefaultValue(new DateTime(2025, 3, 14, 12, 30, 2, 697, DateTimeKind.Utc).AddTicks(7091));
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -273,7 +276,7 @@ namespace HotelReservationSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2025, 3, 10, 22, 5, 24, 20, DateTimeKind.Utc).AddTicks(8694));
+                        .HasDefaultValue(new DateTime(2025, 3, 14, 12, 30, 2, 698, DateTimeKind.Utc).AddTicks(1935));
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -325,7 +328,7 @@ namespace HotelReservationSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2025, 3, 10, 22, 5, 24, 21, DateTimeKind.Utc).AddTicks(3807));
+                        .HasDefaultValue(new DateTime(2025, 3, 14, 12, 30, 2, 698, DateTimeKind.Utc).AddTicks(7797));
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -367,18 +370,18 @@ namespace HotelReservationSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2025, 3, 10, 22, 5, 24, 21, DateTimeKind.Utc).AddTicks(8595));
+                        .HasDefaultValue(new DateTime(2025, 3, 14, 12, 30, 2, 699, DateTimeKind.Utc).AddTicks(5314));
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FacilityCount")
+                    b.Property<int>("FacilityCount")
                         .HasColumnType("int");
 
                     b.Property<int>("FacilityId")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("FacilityPrice")
+                    b.Property<decimal>("FacilityPrice")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
@@ -453,7 +456,7 @@ namespace HotelReservationSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2025, 3, 10, 22, 5, 24, 22, DateTimeKind.Utc).AddTicks(1869));
+                        .HasDefaultValue(new DateTime(2025, 3, 14, 12, 30, 2, 699, DateTimeKind.Utc).AddTicks(8876));
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -513,13 +516,13 @@ namespace HotelReservationSystem.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "b479308d-27fd-4e35-bd74-f92ca2512040",
+                            Id = "bab0b80b-9f4d-41a0-9873-c38f78adf4c2",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "36f6c400-f3d1-4136-bc32-db6598fd41a2",
+                            Id = "f0f45cf8-d884-4c9c-9874-2b53b851e158",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         });

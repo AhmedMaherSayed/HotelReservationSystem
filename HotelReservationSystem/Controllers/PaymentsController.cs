@@ -1,6 +1,6 @@
-﻿using HotelReservationSystem.Services.PaymentService;
+﻿using HotelReservationSystem.DTOs;
+using HotelReservationSystem.Services.PaymentService;
 using HotelReservationSystem.ViewModels;
-using HotelReservationSystem.ViewModels.ReservationViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +8,25 @@ namespace HotelReservationSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PaymentsController(IPaymentService paymentService) : ControllerBase
+    public class PaymentsController : ControllerBase
     {
-        [HttpPost("CreateOrUpdatePaymentIntent/{reservationId:int}")]
-        public async Task<ResponseViewModel<ReservationViewModel>> CreateOrUpdatePaymentIntentAsync(int reservationId)
-         => await paymentService.CreateOrUpdatePaymentIntentAsync(reservationId);
+        private readonly IPaymentService _paymentService;
+
+        public PaymentsController(IPaymentService paymentService)
+        {
+            _paymentService = paymentService;
+        }
+
+        [HttpPost("CreatePaymentIntent/{reservationId:int}")]
+        public async Task<ResponseViewModel<PaymentIntentDTO>> CreatePaymentIntentAsync(int reservationId)
+        {
+            return await _paymentService.CreatePaymentIntentAsync(reservationId);
+        }
+
+        [HttpPost("UpdatePaymentIntent/{reservationId:int}")]
+        public async Task<ResponseViewModel<bool>> UpdatePaymentIntentAsync(int reservationId)
+        {
+            return await _paymentService.UpdatePaymentIntentAsync(reservationId);
+        }
     }
 }

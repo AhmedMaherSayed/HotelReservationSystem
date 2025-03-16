@@ -14,8 +14,8 @@ namespace HotelReservationSystem.Configurations
             builder.Property(x => x.CurrentPricePerNight)
                 .HasPrecision(10, 2);
 
-            builder.Property(x => x.Status)
-                .HasDefaultValue(RoomStatus.Available);
+            //builder.Property(x => x.Status)
+            //    .HasDefaultValue(RoomStatus.Available);
 
             builder.HasMany(x => x.Reservations)
                 .WithOne(x => x.Room)

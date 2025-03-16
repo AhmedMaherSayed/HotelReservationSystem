@@ -5,6 +5,12 @@
         None=0,
         RoomNotFound=100,
         InvalidRoomRequest=101,
+        RoomNotAvailable=102,
+        ReservationNotFound=103,
+        InvalidOperation=104,
+        PaymentError=105,
+        RoomAlreadyBooked = 106,
+
 
         Ok = 200,
 

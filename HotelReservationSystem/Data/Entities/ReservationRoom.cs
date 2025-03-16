@@ -1,4 +1,6 @@
-﻿namespace HotelReservationSystem.Data.Entities
+﻿using HotelReservationSystem.Data.Enums;
+
+namespace HotelReservationSystem.Data.Entities
 {
     public class ReservationRoom : BaseModel
     {
@@ -8,5 +10,6 @@
         public Room Room { get; set; }
         public int NumberOfNights { get; set; }
         public decimal PricePerNight { get; set; }
+        public ReservationRoomStatus Status { get; set; }
     }
 }

@@ -10,8 +10,6 @@ namespace HotelReservationSystem.Data.Entities
         public DateTime? CheckOutDate { get; set; }
         public decimal TotalPrice { get; set; }
         public ReservationStatus Status { get; set; }
-        public string? PaymentIntentId { get; set; }
-        public string? ClientSecret { get; set; }
         public ICollection<ReservationRoom> Rooms { get; set; }
         public Feedback? Feedback { get; set; }
         public Invoice? Invoice { get; set; }

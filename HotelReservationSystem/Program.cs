@@ -5,7 +5,9 @@ using HotelReservationSystem.Extensions;
 using HotelReservationSystem.Helpers;
 using HotelReservationSystem.Middelwares;
 using HotelReservationSystem.Repositories;
-using HotelReservationSystem.Services;
+using HotelReservationSystem.Services.PaymentService;
+using HotelReservationSystem.Services.Reservation;
+using HotelReservationSystem.Services.Room;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
@@ -17,14 +19,17 @@ namespace HotelReservationSystem
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
+
             builder.Services.AddSwaggerGen();
-            builder.Services.AddScoped<RoomService>();
+
+            builder.Services.AddScoped<IPaymentService, PaymentService>();
+            builder.Services.AddScoped<IRoomService, RoomService>();
+            builder.Services.AddScoped<IReservationService, ReservationService>();
+
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSqlConnection"))
                 .LogTo(log => Debug.WriteLine(log), LogLevel.Information)

@@ -2,8 +2,7 @@
 {
     public enum RoomStatus
     {
-        Available,
-        Reserved,
+       
         Maintenance,
         OutOfService
     }
