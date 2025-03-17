@@ -6,6 +6,7 @@ using HotelReservationSystem.Helpers;
 using HotelReservationSystem.Middelwares;
 using HotelReservationSystem.Repositories;
 using HotelReservationSystem.Services.PaymentService;
+using HotelReservationSystem.Services.Report;
 using HotelReservationSystem.Services.Reservation;
 using HotelReservationSystem.Services.Room;
 using Microsoft.EntityFrameworkCore;
@@ -24,9 +25,7 @@ namespace HotelReservationSystem
 
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddScoped<IPaymentService, PaymentService>();
-            builder.Services.AddScoped<IRoomService, RoomService>();
-            builder.Services.AddScoped<IReservationService, ReservationService>();
+
 
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 

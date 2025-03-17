@@ -7,6 +7,8 @@ using HotelReservationSystem.ViewModels.AuthenticationViewModels;
 using HotelReservationSystem.ViewModels.FeedbackViewModels;
 using Microsoft.AspNetCore.Identity;
 using HotelReservationSystem.ViewModels;
+using HotelReservationSystem.DTOs.ReportDto;
+using HotelReservationSystem.ViewModels.ReportViewModels;
 
 namespace HotelReservationSystem.Helpers
 {
@@ -44,6 +46,15 @@ namespace HotelReservationSystem.Helpers
             CreateMap<Feedback, DisplayFeedbackDto>();
             CreateMap<DisplayFeedbackDto, DisplayFeebackViewModel>();
             CreateMap<Feedback, DisplayFeebackViewModel>();
+            #endregion
+
+            #region Report
+
+            CreateMap<BookingReportDTO, BookingReportViewModel>();
+            CreateMap<OccupancyTrendDTO, OccupancyTrendViewModel>();
+            CreateMap<RevenueReportDTO, RevenueReportViewModel>();
+            CreateMap<RevenueTrendDTO, RevenueTrendViewModel>();
+
             #endregion
         }
     }
